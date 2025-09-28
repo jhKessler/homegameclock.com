@@ -29,7 +29,6 @@ export default function ConfigPageWrapper() {
     setConfig,
     registerRestart
   } = useConfigStore((state) => state)
-  console.log(playerOptions)
   const timer = useTimerStore((state) => state);
 
   const estimatedDuration = useMemo(() => {

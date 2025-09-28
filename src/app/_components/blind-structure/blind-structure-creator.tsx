@@ -48,7 +48,6 @@ export function BlindStructureCreator({ open, onOpenChange, onAcceptStructure, l
       numberOfPlayers, // Use a default value; could be made configurable
       smallestChip: 25 // Assuming smallest chip denomination is 25; could be made configurable
     })
-    console.log("Calculated levels:", levels)
     setCalculatedLevels(levels)
     setEditableLevels(levels)
     setShowCalculated(true)

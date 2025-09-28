@@ -11,7 +11,6 @@ export const PrizePool = () => {
 
     if (prizePool === null) return null;
 
-    console.log("Rendering PrizePool with value:", prizePool);
 
     const formattedPrizePool = new Intl.NumberFormat("en-US", {
         style: "currency",
