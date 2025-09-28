@@ -10,9 +10,10 @@ import { BlindLevelBadge } from "./blind-level-badge"
 type Props = {
   blindLevels: BlindLevel[]
   onOpen: () => void
+  isDisabled: boolean
 }
 
-export function BlindStructureCard({ blindLevels, onOpen }: Props) {
+export function BlindStructureCard({ blindLevels, onOpen, isDisabled }: Props) {
   const gridRef = useRef<HTMLDivElement>(null)
   // 1. Start with a reasonable default width (in pixels) to prevent flicker.
   const [minColWidth, setMinColWidth] = useState(90)
@@ -39,7 +40,7 @@ export function BlindStructureCard({ blindLevels, onOpen }: Props) {
           <CardTitle>Blind Structure</CardTitle>
           <CardDescription>Tournament blind levels</CardDescription>
         </div>
-        <Button variant="outline" onClick={onOpen}>
+        <Button variant="outline" onClick={onOpen} disabled={isDisabled}>
           <Wand2 className="mr-2 h-4 w-4" />
           Blind Structure Creator
         </Button>

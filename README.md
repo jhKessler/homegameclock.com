@@ -1,13 +1,7 @@
 # Create T3 App
 
 
-TODO: take number of players into account for estimated duration
 make starting stack changable for estimated duration
-make status indicator look good
-add "continue" button and "reset" button
-add pause and add leave game button
-add logo
-add price pool display and rebuy button
 add leaderboard
 add sounds
 deploy

@@ -14,8 +14,9 @@ import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 
 interface PlayerOptions {
-  players: number | null
+  players: number
   buyIn: number | null
+  rebuys: number
 }
 
 interface PlayerOptionsModalProps {
@@ -33,7 +34,7 @@ export function PlayerOptionsModal({ open, onOpenChange, options, onOptionsChang
   }, [options])
 
   const handleSave = () => {
-    if (localOptions.players && localOptions.buyIn) {
+    if (localOptions.players) {
       onOptionsChange(localOptions)
       onOpenChange(false)
     }
@@ -44,7 +45,7 @@ export function PlayerOptionsModal({ open, onOpenChange, options, onOptionsChang
     onOpenChange(false)
   }
 
-  const canSave = localOptions.players && localOptions.buyIn && localOptions.players > 0 && localOptions.buyIn > 0
+  const canSave = localOptions.players > 0
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -65,7 +66,7 @@ export function PlayerOptionsModal({ open, onOpenChange, options, onOptionsChang
               onChange={(e) =>
                 setLocalOptions((prev) => ({
                   ...prev,
-                  players: e.target.value ? Number(e.target.value) : null,
+                  players: e.target.value ? Number(e.target.value) : 9,
                 }))
               }
               min="2"
@@ -84,6 +85,7 @@ export function PlayerOptionsModal({ open, onOpenChange, options, onOptionsChang
                 setLocalOptions((prev) => ({
                   ...prev,
                   buyIn: e.target.value ? Number(e.target.value) : null,
+                  rebuys: 0
                 }))
               }
               min="1"
@@ -97,9 +99,6 @@ export function PlayerOptionsModal({ open, onOpenChange, options, onOptionsChang
               <div className="text-sm text-muted-foreground">
                 Total Prize Pool:{" "}
                 <span className="font-mono">${(localOptions.players * localOptions.buyIn).toLocaleString()}</span>
-              </div>
-              <div className="text-sm text-muted-foreground">
-                Starting Chips: <span className="font-mono">{(localOptions.buyIn * 100).toLocaleString()}</span>
               </div>
             </div>
           )}

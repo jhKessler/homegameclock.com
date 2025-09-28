@@ -21,14 +21,13 @@ import type { CurrentLevelInfo, ProgressionItem } from "./config-store";
  */
 export const calculateCurrentLevel = (
   progression: ProgressionItem[],
-  startTime: number,
-  currentTime: number,
+  timeElapsed: number,
 ): CurrentLevelInfo | null => {
-  if (!progression || progression.length === 0 || !startTime) {
+  if (!progression || progression.length === 0) {
     return null;
   }
 
-  const totalSecondsElapsed = Math.floor((currentTime - startTime) / 1000);
+  const totalSecondsElapsed = Math.floor(timeElapsed / 1000);
   let cumulativeSeconds = 0;
 
   for (let i = 0; i < progression.length; i++) {

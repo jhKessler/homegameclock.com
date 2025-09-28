@@ -9,9 +9,10 @@ type Props = {
   timePerLevel: number
   setTimePerLevel: (n: number) => void
   estimatedDuration: number
+  isDisabled: boolean
 }
 
-export function TimeConfigurationCard({ timePerLevel, setTimePerLevel, estimatedDuration }: Props) {
+export function TimeConfigurationCard({ timePerLevel, setTimePerLevel, estimatedDuration, isDisabled }: Props) {
   return (
     <Card>
       <CardHeader>
@@ -32,6 +33,7 @@ export function TimeConfigurationCard({ timePerLevel, setTimePerLevel, estimated
             min={1}
             max={120}
             className="text-lg font-mono"
+            disabled={isDisabled}
           />
         </div>
         <div className="rounded-lg bg-muted p-4">
@@ -42,7 +44,7 @@ export function TimeConfigurationCard({ timePerLevel, setTimePerLevel, estimated
                 <Info className="h-4 w-4" />
               </TooltipTrigger>
               <TooltipContent>
-                <p>With a starting stack of 20000 chips</p>
+                <p>With a starting stack of 20000 chips and the current blind structure</p>
               </TooltipContent>
             </Tooltip>
           </div>

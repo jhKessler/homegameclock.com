@@ -12,7 +12,7 @@ import {
 import { Button } from "~/components/ui/button"
 import { Calculator } from "lucide-react"
 import type { BlindLevel } from "~/lib/interfaces/blind-level"
-import { calculateBlindStructure } from "./calculated-blind-structure"
+import { calculateBlindStructure } from "./calculate-blind-structure"
 import { EditableLevelsList } from "./editable-lebels-list"
 import { CalculatedLevelsGrid } from "./calculated-levels-grid"
 import { TournamentParamsForm } from "./tournament-params-form"
@@ -22,12 +22,14 @@ interface BlindStructureCreatorProps {
   onOpenChange: (open: boolean) => void
   onAcceptStructure: (blindLevels: BlindLevel[]) => void
   levelDuration: number // in minutes
+  numberOfPlayersInit: number
+  saveNumberOfPlayers: (num: number) => void
 }
 
-export function BlindStructureCreator({ open, onOpenChange, onAcceptStructure, levelDuration }: BlindStructureCreatorProps) {
+export function BlindStructureCreator({ open, onOpenChange, onAcceptStructure, levelDuration, numberOfPlayersInit, saveNumberOfPlayers }: BlindStructureCreatorProps) {
   const [startingStack, setStartingStack] = useState<number>(20000)
   const [targetTournamentDuration, setTargetTournamentDuration] = useState<number>(180)
-  const [numberOfPlayers, setNumberOfPlayers] = useState<number>(10)
+  const [numberOfPlayers, setNumberOfPlayers] = useState<number>(numberOfPlayersInit)
 
   const [calculatedLevels, setCalculatedLevels] = useState<BlindLevel[]>([])
   const [editableLevels, setEditableLevels] = useState<BlindLevel[]>([])
@@ -54,6 +56,7 @@ export function BlindStructureCreator({ open, onOpenChange, onAcceptStructure, l
 
   const handleAccept = () => {
     onAcceptStructure(isEditing ? editableLevels : calculatedLevels)
+    saveNumberOfPlayers(numberOfPlayers)
     handleClose()
   }
 

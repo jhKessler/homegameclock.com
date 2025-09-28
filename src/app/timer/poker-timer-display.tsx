@@ -1,28 +1,31 @@
 "use client";
 
+import { Button } from "~/components/ui/button";
 import type { CurrentLevelInfo } from "~/stores/config/config-store";
 import BlindsDisplay from "./_components/blinds-display";
 import CountdownDisplay from "./_components/countdown-display";
 import InfoPanel from "./_components/info-display";
 import StatusIndicator from "./_components/level-type-display";
 import LoadingDisplay from "./_components/loading-display";
-
-
-
-// This is the main component, now refactored to be a clean container.
-// It fetches and holds the state, passing props down to the display components.
+import ConfirmationDialog from "~/components/ui/confirmation-dialog";
+import { PlayPauseButton } from "./_components/play-pause-button";
 
 interface PokerTimerDisplayProps {
     currentLevelInfo: CurrentLevelInfo | null;
     secondsSinceStart: number;
-    totalPricePool: number; // This prop is unused but kept for API consistency
+    totalPricePool: number | null;
+    onReset: () => void;
+    isPaused: boolean;
 }
 
 export default function PokerTimerDisplay({
     currentLevelInfo,
     secondsSinceStart,
+    totalPricePool,
+    onReset,
+    isPaused
 }: PokerTimerDisplayProps) {
-    // If there's no data yet, show the loading screen.
+
     if (!currentLevelInfo) {
         return <LoadingDisplay />;
     }
@@ -30,21 +33,37 @@ export default function PokerTimerDisplay({
     const isBreak = currentLevelInfo.type === "break";
 
     return (
-        <div className="min-h-screen p-8 flex flex-col">
-            <main className="flex-1 flex flex-col items-center justify-center gap-12 lg:gap-16">
-                {/* Top section with status and countdown */}
-                <section className="flex flex-col items-center space-y-8 lg:space-y-12">
-                    <StatusIndicator isBreak={isBreak} />
-                    <CountdownDisplay secondsLeft={currentLevelInfo.secondsLeftInLevel} />
+        <div className="min-h-screen p-8 flex flex-col items-center justify-center">
+            <main className="flex-1 flex flex-col items-center justify-center gap-12 lg:gap-16 w-full max-w-6xl">
+                <section className="flex flex-col items-center space-y-8 lg:space-y-12 w-full">
+                    <div className="grid grid-cols-3 w-full items-center">
+                        <ConfirmationDialog
+                            onConfirm={onReset}
+                            title="Are you absolutely sure?"
+                            description="This action cannot be undone. This will permanently stop and reset the poker timer."
+                        >
+                            <Button
+                                variant="secondary"
+                                aria-label="Stop and reset the timer"
+                                size="lg"
+                                className="justify-self-start"
+                            >
+                                Stop Timer
+                            </Button>
+                        </ConfirmationDialog>
+                        <StatusIndicator isBreak={isBreak} className="justify-self-center" />
+                        <div className="justify-self-end">
+                            {!isBreak && <PlayPauseButton />}
+                        </div>
+                    </div>
+                    <CountdownDisplay secondsLeft={currentLevelInfo.secondsLeftInLevel} isPaused={isPaused} />
                 </section>
 
-                {/* Bottom section with blind info and other tournament data */}
-                <section className="w-full max-w-6xl flex flex-col items-center space-y-8">
+                <section className="flex flex-col items-center space-y-8 w-full">
                     <BlindsDisplay
                         smallBlind={currentLevelInfo.smallBlind}
                         bigBlind={currentLevelInfo.bigBlind}
                     />
-
                     <InfoPanel
                         nextSmallBlind={currentLevelInfo.nextSmallBlind}
                         nextBigBlind={currentLevelInfo.nextBigBlind}
@@ -56,4 +75,3 @@ export default function PokerTimerDisplay({
         </div>
     );
 }
-

@@ -9,9 +9,10 @@ type Props = {
   breakConfig: BreakConfig
   onOpenBreakModal: () => void
   totalLevels: number
+  isDisabled: boolean
 }
 
-export function BreakSettingsCard({ breakConfig, onOpenBreakModal, totalLevels }: Props) {
+export function BreakSettingsCard({ breakConfig, onOpenBreakModal, totalLevels, isDisabled }: Props) {
   return (
     <Card>
       <CardHeader>
@@ -22,7 +23,7 @@ export function BreakSettingsCard({ breakConfig, onOpenBreakModal, totalLevels }
         <CardDescription>Configure tournament breaks</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Button variant="outline" onClick={onOpenBreakModal} className="w-full justify-start">
+        <Button variant="outline" onClick={onOpenBreakModal} disabled={isDisabled} className="w-full justify-start">
           <Settings className="mr-2 h-4 w-4" />
           {breakConfig.enabled
             ? `Break every ${breakConfig.everyXLevels} levels (${breakConfig.duration}min)`

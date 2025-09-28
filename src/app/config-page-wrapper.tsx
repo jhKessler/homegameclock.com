@@ -5,7 +5,6 @@ import { TooltipProvider } from "~/components/ui/tooltip"
 
 import { Button } from "~/components/ui/button"
 
-import Link from "next/link"
 import { useConfigStore } from "~/stores/config/config-store-provider"
 import { BlindStructureCreator } from "./_components/blind-structure/blind-structure-creator"
 import { BreakModal } from "./_components/break-modal"
@@ -16,37 +15,39 @@ import { TournamentDetailsCard } from "./_components/config/tournament-details-c
 import { PlayerOptionsModal } from "./_components/player-options-modal"
 import { useTimerStore } from "~/stores/timer/timer-store-provider"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { config } from "process"
 
 export default function ConfigPageWrapper() {
-  const router = useRouter(); 
+  const router = useRouter();
   const {
     timePerLevelMinutes,
     blindLevels,
     breakConfig,
     playerOptions,
     moreOptions,
-    setConfig, // Get the action to update the store
+    setConfig,
+    registerRestart
   } = useConfigStore((state) => state)
-
+  console.log(playerOptions)
   const timer = useTimerStore((state) => state);
 
-
-  // Memoization still works perfectly
   const estimatedDuration = useMemo(() => {
-    const index = blindLevels.findIndex(level => level.bigBlind >= (moreOptions.startingStack / 4));
+    const blindlevelGoal =  (playerOptions.players * moreOptions.startingStack) / 10;
+    const index = blindLevels.findIndex(level => level.bigBlind >= blindlevelGoal);
     const withoutBreaks = index === -1 ? blindLevels.length * timePerLevelMinutes : (index + 1) * timePerLevelMinutes;
     if (!breakConfig.enabled) return withoutBreaks;
     const numberOfBreaks = Math.floor((index === -1 ? blindLevels.length : index + 1) / breakConfig.everyXLevels);
     return withoutBreaks + (numberOfBreaks * breakConfig.duration);
-  }, [timePerLevelMinutes, blindLevels, moreOptions, breakConfig])
+  }, [timePerLevelMinutes, blindLevels, moreOptions, breakConfig, playerOptions])
 
-  // --- 2. Keep local state ONLY for UI concerns (like modal visibility) ---
   const [showBreakModal, setShowBreakModal] = useState(false)
   const [showPlayerOptionsModal, setShowPlayerOptionsModal] = useState(false)
   const [showBlindCreator, setShowBlindCreator] = useState(false)
 
 
   const startTimer = () => {
+    registerRestart()
     timer.start();
     router.push('/timer');
   }
@@ -61,31 +62,34 @@ export default function ConfigPageWrapper() {
           </div>
 
           <div className="grid gap-6 lg:grid-cols-2">
-            {/* --- 3. Pass store values and updater functions to children --- */}
             <TimeConfigurationCard
               timePerLevel={timePerLevelMinutes}
-              // Update the store directly
               setTimePerLevel={(newTime) => setConfig({ timePerLevelMinutes: newTime })}
               estimatedDuration={estimatedDuration}
+              isDisabled={!!timer.startTime}
             />
             <BreakSettingsCard
               breakConfig={breakConfig}
               onOpenBreakModal={() => setShowBreakModal(true)}
               totalLevels={blindLevels.length}
+              isDisabled={!!timer.startTime}
             />
           </div>
 
-          <BlindStructureCard blindLevels={blindLevels} onOpen={() => setShowBlindCreator(true)} />
+          <BlindStructureCard blindLevels={blindLevels} onOpen={() => setShowBlindCreator(true)} isDisabled={!!timer.startTime} />
 
           <TournamentDetailsCard
             playerOptions={playerOptions}
             onOpenPlayerOptions={() => setShowPlayerOptionsModal(true)}
+            isDisabled={!!timer.startTime}
           />
 
           <div className="text-center">
-            <Button onClick={startTimer} size="lg" className="px-12 py-6 text-lg font-semibold">
+            {timer.startTime ? <Button asChild size="lg" className="px-12 py-6 text-lg font-semibold">
+              <Link href="/timer">Go to Game</Link>
+            </Button> : <Button onClick={startTimer} size="lg" className="px-12 py-6 text-lg font-semibold">
               Start Game
-            </Button>
+            </Button>}
           </div>
         </div>
 
@@ -97,6 +101,7 @@ export default function ConfigPageWrapper() {
         />
 
         <PlayerOptionsModal
+          key={`player-modal-${playerOptions.players}`}
           open={showPlayerOptionsModal}
           onOpenChange={setShowPlayerOptionsModal}
           options={playerOptions}
@@ -104,10 +109,13 @@ export default function ConfigPageWrapper() {
         />
 
         <BlindStructureCreator
+          key={`blind-structure-${playerOptions.players}`}
           open={showBlindCreator}
           onOpenChange={setShowBlindCreator}
           onAcceptStructure={(newLevels) => setConfig({ blindLevels: newLevels })}
           levelDuration={timePerLevelMinutes}
+          numberOfPlayersInit={playerOptions.players}
+          saveNumberOfPlayers={(num) => setConfig({ playerOptions: { ...playerOptions, players: num }})}
         />
       </div>
     </TooltipProvider>

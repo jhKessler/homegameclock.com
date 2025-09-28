@@ -13,7 +13,7 @@ const InfoItem = ({
 }) => (
   <div className="text-center flex-1 min-w-[150px]">
     <div className="text-2xl text-muted-foreground mb-3">{title}</div>
-    <div className="text-xl font-bold">{value}</div>
+    <div className="text-2xl font-bold">{value}</div>
   </div>
 );
 

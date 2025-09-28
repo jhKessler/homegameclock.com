@@ -1,20 +1,34 @@
 "use client";
 
-// This component displays whether it's currently a blind level or a break.
+import { cn } from "~/lib/utils"; // Assuming you have a cn utility for merging classes
 
 interface StatusIndicatorProps {
-  isBreak: boolean;
+    isBreak: boolean;
+    className?: string;
 }
 
-export default function StatusIndicator({ isBreak }: StatusIndicatorProps) {
-  const text = isBreak ? "Players are now on break" : "Level Time";
-  const styling = isBreak
-    ? "bg-destructive text-destructive-foreground"
-    : "bg-primary text-primary-foreground";
+export default function StatusIndicator({ isBreak, className }: StatusIndicatorProps) {
+    if (isBreak) {
+        return (
+            <div
+                className={cn(
+                    "rounded-xl bg-destructive px-8 py-4 text-center text-3xl font-bold text-destructive-foreground shadow-lg animate-pulse",
+                    className
+                )}
+            >
+                Players are on break
+            </div>
+        );
+    }
 
-  return (
-    <div className={`px-8 py-4 rounded-xl text-2xl font-bold ${styling}`}>
-      {text}
-    </div>
-  );
+    return (
+        <div
+            className={cn(
+                "rounded-xl px-8 py-4 text-center text-4xl font-semibold text-secondary-foreground",
+                className
+            )}
+        >
+            Level Time
+        </div>
+    );
 }

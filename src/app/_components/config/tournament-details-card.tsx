@@ -8,9 +8,10 @@ type PlayerOptions = { players: number | null; buyIn: number | null }
 type Props = {
   playerOptions: PlayerOptions
   onOpenPlayerOptions: () => void
+  isDisabled: boolean
 }
 
-export function TournamentDetailsCard({ playerOptions, onOpenPlayerOptions }: Props) {
+export function TournamentDetailsCard({ playerOptions, onOpenPlayerOptions, isDisabled }: Props) {
   const players = playerOptions.players ?? 0
   const buyIn = playerOptions.buyIn ?? 0
   const showStats = playerOptions.players != null && playerOptions.buyIn != null
@@ -22,7 +23,7 @@ export function TournamentDetailsCard({ playerOptions, onOpenPlayerOptions }: Pr
         <CardDescription>Optional tournament information</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Button variant="outline" onClick={onOpenPlayerOptions} className="w-full justify-start">
+        <Button variant="outline" onClick={onOpenPlayerOptions} className="w-full justify-start" disabled={isDisabled}>
           <Users className="mr-2 h-4 w-4" />
           {showStats ? `${players} players • $${buyIn} buy-in` : "Set Players & Buy-in"}
         </Button>
@@ -34,10 +35,6 @@ export function TournamentDetailsCard({ playerOptions, onOpenPlayerOptions }: Pr
               <div className="text-2xl font-bold">
                 ${(players * buyIn).toLocaleString()}
               </div>
-            </div>
-            <div className="rounded-lg bg-muted p-4">
-              <div className="text-sm text-muted-foreground">Starting Chips</div>
-              <div className="text-2xl font-bold">{(buyIn * 100).toLocaleString()}</div>
             </div>
           </div>
         )}

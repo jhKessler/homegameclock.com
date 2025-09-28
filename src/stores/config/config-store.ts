@@ -3,7 +3,6 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 import type { BlindLevel } from '~/lib/interfaces/blind-level'
 import { calculateCurrentLevel } from './calculate-current-level'
 
-// --- TYPE DEFINITIONS ---
 
 export type ProgressionItem =
   | {
@@ -31,7 +30,7 @@ export type ConfigState = {
   timePerLevelMinutes: number
   blindLevels: BlindLevel[]
   breakConfig: { enabled: boolean; everyXLevels: number; duration: number }
-  playerOptions: { players: number | null; buyIn: number | null }
+  playerOptions: { players: number; buyIn: number | null; rebuys: number }
   moreOptions: { startingStack: number }
   progression: ProgressionItem[]
 }
@@ -40,6 +39,9 @@ export type ConfigActions = {
   setConfig: (newConfig: Partial<ConfigState>) => void
   // Add the new function signature here
   getCurrentLevel: (totalSecondsElapsed: number) => CurrentLevelInfo | null
+  getPrizePool: () => number | null
+  registerRebuy: () => void
+  registerRestart: () => void
 }
 
 export type ConfigStore = ConfigState & ConfigActions
@@ -99,7 +101,7 @@ const defaultConfig = {
   timePerLevelMinutes: 15,
   blindLevels: defaultBlindLevels,
   breakConfig: { enabled: false, everyXLevels: 5, duration: 15 },
-  playerOptions: { players: null, buyIn: null },
+  playerOptions: { players: 9, buyIn: null, rebuys: 0 },
   moreOptions: { startingStack: 20000 },
 }
 
@@ -141,7 +143,29 @@ export const createConfigStore = (
             return updatedState
           }),
 
-        getCurrentLevel: (startTime: number) =>  calculateCurrentLevel(get().progression, startTime, Date.now())
+        getCurrentLevel: (timeElapsed: number) =>  calculateCurrentLevel(get().progression, timeElapsed),
+        getPrizePool: () => {
+          const { playerOptions } = get();
+          if (!playerOptions.players || !playerOptions.buyIn) return null;
+          return (playerOptions.players + playerOptions.rebuys) * (playerOptions.buyIn)
+        },
+        registerRebuy: () => set((state) => {
+          const newRebuys = state.playerOptions.rebuys + 1;
+          return {
+            ...state,
+            playerOptions: {
+              ...state.playerOptions,
+              rebuys: newRebuys
+            }
+          }
+        }),
+        registerRestart: () => set((state) => ({
+          ...state,
+          playerOptions: {
+            ...state.playerOptions,
+            rebuys: 0
+          }
+        })),
       }),
       {
         name: STORAGE_KEY,

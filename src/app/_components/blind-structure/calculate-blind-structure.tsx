@@ -1,3 +1,5 @@
+import { number } from "zod";
+
 // --- Type definitions (assuming from your project structure) ---
 interface BlindLevel {
   smallBlind: number;
@@ -102,7 +104,7 @@ export function calculateBlindStructure({
   const totalLevels = Math.ceil(targetTournamentDuration / levelDuration);
 
   // The final level of the tournament should have a blind where a starting stack is ~4 Big Blinds.
-  const TARGET_STACK_IN_BBS_AT_END = 4;
+  const TARGET_STACK_IN_BBS_AT_END = 10 / numberOfPlayers;
   const targetEndBigBlind = startingStack / TARGET_STACK_IN_BBS_AT_END;
   const targetEndSmallBlind = targetEndBigBlind / 2;
 
@@ -115,7 +117,7 @@ export function calculateBlindStructure({
   const startIndex = canonicalBlinds.indexOf(smallestChip);
   const finalBlinds = new Set<number>();
 
-  for (let i = 0; i < totalLevels; i++) {
+  for (let i = 0; i < totalLevels+6; i++) {
     // If there's only one level, or it's the last level, progress is 1 (100%)
     const progress = (totalLevels <= 1) ? 1 : i / (totalLevels - 1);
     

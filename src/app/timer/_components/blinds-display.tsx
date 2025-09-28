@@ -2,6 +2,7 @@
 
 import { Card } from "~/components/ui/card";
 import { formatBlind } from "../utils";
+import { PrizePool } from "./prize-pool";
 
 // This component is a dedicated card for showing the current small and big blinds.
 
@@ -12,7 +13,8 @@ interface BlindsDisplayProps {
 
 export default function BlindsDisplay({ smallBlind, bigBlind }: BlindsDisplayProps) {
   return (
-    <Card className="p-12 bg-card border-2 w-full">
+    <Card className="p-12 bg-card border-2 w-full grid grid-cols-3">
+      <div></div>
       <div className="text-center space-y-6">
         <div className="text-2xl text-muted-foreground">Current Blinds</div>
         <div className="flex items-center justify-center space-x-6 md:space-x-12">
@@ -31,6 +33,7 @@ export default function BlindsDisplay({ smallBlind, bigBlind }: BlindsDisplayPro
           </div>
         </div>
       </div>
+      <PrizePool />
     </Card>
   );
 }
