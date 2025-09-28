@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { TooltipProvider } from "~/components/ui/tooltip"
 
 import { Button } from "~/components/ui/button"
@@ -16,8 +16,7 @@ import { PlayerOptionsModal } from "./_components/player-options-modal"
 import { useTimerStore } from "~/stores/timer/timer-store-provider"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { config } from "process"
-
+import { toast } from "sonner"
 export default function ConfigPageWrapper() {
   const router = useRouter();
   const {
@@ -44,6 +43,11 @@ export default function ConfigPageWrapper() {
   const [showPlayerOptionsModal, setShowPlayerOptionsModal] = useState(false)
   const [showBlindCreator, setShowBlindCreator] = useState(false)
 
+  useEffect(() => {
+    if (timer.startTime) {
+      toast("Your game is already in progress. To go there, click 'Go to Game'.")
+    }
+  }, [timer.startTime])
 
   const startTimer = () => {
     registerRestart()

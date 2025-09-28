@@ -6,6 +6,7 @@ import { ConfigStoreProvider } from '~/stores/config/config-store-provider';
 import { TimerStoreProvider } from '~/stores/timer/timer-store-provider';
 import { Logo } from '~/components/logo';
 import { PostHogProvider } from '~/providers/PostHogProvider';
+import { Toaster } from '~/components/ui/sonner';
 
 export const metadata: Metadata = {
   title: 'Free Online Poker Timer for Home Games | HomeGameClock.com',
@@ -32,6 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistMono.variable}`}>
       <body>
+        <Toaster />
         <PostHogProvider>
           <ConfigStoreProvider>
             <TimerStoreProvider>
