@@ -19,6 +19,7 @@ export default function TimerPageWrapper() {
     if (!playerOptions.players || !playerOptions.buyIn) return null;
     return (playerOptions.players) * (playerOptions.buyIn)
   }, [playerOptions])
+  
 
   useInterval(() => {
     const timeElapsed = getTimeElapsed();

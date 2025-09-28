@@ -2,7 +2,6 @@
 
 
 make starting stack changable for estimated duration
-add leaderboard
 add sounds
 deploy
 
