@@ -24,6 +24,7 @@ export type CurrentLevelInfo = ProgressionItem & {
   nextBigBlind: number | null
   secondsLeftInLevel: number
   timeToNextBreak: number | null
+  secondsElapsedInLevel: number
 }
 
 export type ConfigState = {

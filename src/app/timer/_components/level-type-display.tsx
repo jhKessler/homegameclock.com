@@ -12,11 +12,11 @@ export default function StatusIndicator({ isBreak, className }: StatusIndicatorP
         return (
             <div
                 className={cn(
-                    "rounded-xl bg-destructive px-8 py-4 text-center text-3xl font-bold text-destructive-foreground shadow-lg animate-pulse",
+                    "rounded-xl bg-orange-400 px-8 py-4 text-center text-3xl font-bold text-white shadow-lg animate-pulse",
                     className
                 )}
             >
-                Players are on break
+                Break
             </div>
         );
     }

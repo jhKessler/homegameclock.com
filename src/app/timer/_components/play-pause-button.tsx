@@ -7,6 +7,7 @@ import { Button } from '~/components/ui/button';
 import { cn } from '~/lib/utils';
 import { useTimerStore } from '~/stores/timer/timer-store-provider';
 import { set } from 'zod';
+import { toast } from 'sonner';
 
 
 
@@ -21,8 +22,10 @@ export function PlayPauseButton() {
   const handleClick = () => {
     if (isPaused) {
       resume();
+      toast.success("Timer resumed");
     } else {
       pause();
+      toast.success("Timer paused");
     }
   };
 

@@ -9,11 +9,12 @@ import StatusIndicator from "./_components/level-type-display";
 import LoadingDisplay from "./_components/loading-display";
 import ConfirmationDialog from "~/components/ui/confirmation-dialog";
 import { PlayPauseButton } from "./_components/play-pause-button";
+import { LogOut } from "lucide-react";
+import { ResetButton } from "./_components/reset-button";
 
 interface PokerTimerDisplayProps {
     currentLevelInfo: CurrentLevelInfo | null;
     secondsSinceStart: number;
-    totalPricePool: number | null;
     onReset: () => void;
     isPaused: boolean;
 }
@@ -21,7 +22,6 @@ interface PokerTimerDisplayProps {
 export default function PokerTimerDisplay({
     currentLevelInfo,
     secondsSinceStart,
-    totalPricePool,
     onReset,
     isPaused
 }: PokerTimerDisplayProps) {
@@ -37,26 +37,13 @@ export default function PokerTimerDisplay({
             <main className="flex-1 flex flex-col items-center justify-center gap-12 lg:gap-16 w-full max-w-6xl">
                 <section className="flex flex-col items-center space-y-8 lg:space-y-12 w-full">
                     <div className="grid grid-cols-3 w-full items-center">
-                        <ConfirmationDialog
-                            onConfirm={onReset}
-                            title="Are you absolutely sure?"
-                            description="This action cannot be undone. This will permanently stop and reset the poker timer."
-                        >
-                            <Button
-                                variant="secondary"
-                                aria-label="Stop and reset the timer"
-                                size="lg"
-                                className="justify-self-start"
-                            >
-                                Stop Timer
-                            </Button>
-                        </ConfirmationDialog>
+                        <ResetButton onReset={onReset} />
                         <StatusIndicator isBreak={isBreak} className="justify-self-center" />
                         <div className="justify-self-end">
-                            {!isBreak && <PlayPauseButton />}
+                            <PlayPauseButton />
                         </div>
                     </div>
-                    <CountdownDisplay secondsLeft={currentLevelInfo.secondsLeftInLevel} isPaused={isPaused} />
+                    <CountdownDisplay secondsLeft={currentLevelInfo.secondsLeftInLevel} isPaused={isPaused} isBreak={isBreak} />
                 </section>
 
                 <section className="flex flex-col items-center space-y-8 w-full">

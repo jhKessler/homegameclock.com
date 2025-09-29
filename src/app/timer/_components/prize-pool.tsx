@@ -4,6 +4,7 @@ import { Button } from "~/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { useConfigStore } from "~/stores/config/config-store-provider";
 import ConfirmationDialog from "~/components/ui/confirmation-dialog";
+import { toast } from "sonner";
 
 export const PrizePool = () => {
     const { registerRebuy, getPrizePool } = useConfigStore((state) => state);
@@ -32,7 +33,10 @@ export const PrizePool = () => {
             </div>
 
             <ConfirmationDialog
-                onConfirm={registerRebuy}
+                onConfirm={() => {
+                    toast.success("Rebuy added to prize pool");
+                    registerRebuy();
+                }}
                 title="Are you absolutely sure?"
                 description="This action cannot be undone. This will add one buy-in to the prize pool."
             >

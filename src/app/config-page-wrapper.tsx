@@ -43,16 +43,10 @@ export default function ConfigPageWrapper() {
   const [showPlayerOptionsModal, setShowPlayerOptionsModal] = useState(false)
   const [showBlindCreator, setShowBlindCreator] = useState(false)
 
-  useEffect(() => {
-    if (timer.startTime) {
-      toast("Your game is already in progress. To go there, click 'Go to Game'.")
-    }
-  }, [timer.startTime])
-
   const startTimer = () => {
     registerRestart()
-    timer.start();
     router.push('/timer');
+    timer.start();
   }
 
   return (
